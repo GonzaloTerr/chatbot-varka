@@ -11,6 +11,12 @@ Asistente conversacional de WhatsApp ("Sofía") para **Varka**, consultora de IA
 
 Construido como un **agente Python liviano** sobre el SDK oficial de Anthropic (sin frameworks pesados), pensado para correr barato y simple en un webhook multiusuario.
 
+<p align="center">
+  <img src="assets/demo.png" alt="Conversación de ejemplo con Sofía" width="320">
+  <br>
+  <em>Sofía reconduce hacia el descubrimiento en vez de irse a los tecnicismos.</em>
+</p>
+
 ## Qué hace
 
 - **Conversa con memoria**: recuerda el historial de cada contacto (Supabase) y retoma charlas iniciadas por otros canales.

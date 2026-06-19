@@ -1,5 +1,11 @@
 # Chatbot Varka — Agente de WhatsApp con IA
 
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
+![Claude](https://img.shields.io/badge/Claude-Haiku%204.5-D97757?logo=anthropic&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
+![WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?logo=whatsapp&logoColor=white)
+
 Asistente conversacional de WhatsApp ("Sofía") para **Varka**, consultora de IA y automatización para pymes. Atiende a los clientes 24/7, hace **venta consultiva** (descubrimiento antes de proponer), responde **texto y notas de voz**, y **reserva reuniones reales en Cal.com** por su cuenta.
 
 Construido como un **agente Python liviano** sobre el SDK oficial de Anthropic (sin frameworks pesados), pensado para correr barato y simple en un webhook multiusuario.
@@ -15,20 +21,20 @@ Construido como un **agente Python liviano** sobre el SDK oficial de Anthropic (
 
 ## Arquitectura
 
-```
-WhatsApp ─▶ WAHA ─▶ webhook (FastAPI)
-                     │  filtra, normaliza teléfono, detecta audio
-                     ▼
-                  debounce (agrupa mensajes rápidos)
-                     ▼
-   memoria (Supabase) ─▶ agente (Claude + tools) ─▶ respuesta (WAHA) ─▶ guardar
-                                  │
-                                  ├─ consultar_disponibilidad (Cal.com)
-                                  ├─ agendar_diagnostico      (Cal.com)
-                                  └─ calificar_lead
+```mermaid
+flowchart TD
+    WA(["Cliente WhatsApp"]) -->|texto / audio| WAHA[WAHA]
+    WAHA -->|POST /webhook| API[FastAPI]
+    API -->|notas de voz| GROQ[Groq Whisper]
+    API --> DEB[Debounce<br/>agrupa mensajes rapidos]
+    DEB --> MEM[(Supabase<br/>memoria)]
+    MEM --> AG{{Agente Claude<br/>+ tool loop}}
+    AG -->|consultar / agendar| CAL[(Cal.com)]
+    AG -->|respuesta + escribiendo...| WAHA
+    WAHA --> WA
 ```
 
-El bucle de tools es manual (`client.messages.create(..., tools=[...])`, `stop_reason == "tool_use"`): cero overhead de frameworks, prompt caching del system prompt y control total del costo por mensaje.
+El bucle de tools es manual: `client.messages.create(..., tools=[...])` y `stop_reason == "tool_use"`. Sin overhead de frameworks, con prompt caching del system prompt y control total del costo por mensaje.
 
 ## Stack
 

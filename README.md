@@ -5,6 +5,7 @@
 ![Claude](https://img.shields.io/badge/Claude-Haiku%204.5-D97757?logo=anthropic&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
 ![WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?logo=whatsapp&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green)
 
 Asistente conversacional de WhatsApp ("Sofía") para **Varka**, consultora de IA y automatización para pymes. Atiende a los clientes 24/7, hace **venta consultiva** (descubrimiento antes de proponer), responde **texto y notas de voz**, y **reserva reuniones reales en Cal.com** por su cuenta.
 

@@ -1,5 +1,5 @@
-fastapi
-uvicorn[standard]
-httpx
-anthropic
-python-dotenv
+fastapi==0.137.1
+uvicorn[standard]==0.49.0
+httpx==0.28.1
+anthropic==0.109.2
+python-dotenv==1.2.2

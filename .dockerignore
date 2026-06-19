@@ -1,0 +1,16 @@
+# Entornos y dependencias locales
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Secretos y config local (NUNCA dentro de la imagen)
+.env
+
+# Git y meta
+.git/
+.gitignore
+
+# Docs (no hacen falta en runtime)
+README.md
+.env.example

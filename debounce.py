@@ -4,7 +4,7 @@ procesa todo junto. En Python con asyncio esto es trivial (cancelar la tarea pre
 Funciona porque uvicorn corre en un solo proceso: el estado en memoria se comparte."""
 import asyncio
 
-VENTANA = 7  # segundos a esperar desde el ultimo mensaje antes de responder
+VENTANA = 5  # segundos a esperar desde el ultimo mensaje antes de responder
 
 _buffers: dict[str, list[str]] = {}   # phone -> textos acumulados
 _tasks: dict[str, asyncio.Task] = {}  # phone -> tarea en espera

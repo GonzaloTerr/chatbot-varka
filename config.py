@@ -9,6 +9,13 @@ load_dotenv()  # carga el .env en local; en EasyPanel no hay .env y usa las vars
 ANTHROPIC_API_KEY = os.environ["ANTHROPIC_API_KEY"]
 SUPABASE_KEY = os.environ["SUPABASE_KEY"]
 
+# --- WhatsApp Cloud API (Meta) — transporte actual ---
+GRAPH_API_VERSION = os.environ.get("GRAPH_API_VERSION", "v22.0")
+WHATSAPP_TOKEN = os.environ.get("WHATSAPP_TOKEN", "")               # token de acceso (permanente en prod)
+WHATSAPP_PHONE_NUMBER_ID = os.environ.get("WHATSAPP_PHONE_NUMBER_ID", "")  # id del numero (no el numero)
+WHATSAPP_VERIFY_TOKEN = os.environ.get("WHATSAPP_VERIFY_TOKEN", "varka_wa_2026")  # para el GET de verificacion
+
+# --- WAHA (legacy, ya no se usa; se migro a la Cloud API oficial) ---
 WAHA_URL = os.environ.get("WAHA_URL", "https://your-waha-host.example.com")
 WAHA_API_KEY = os.environ.get("WAHA_API_KEY", "")
 WAHA_SESSION = os.environ.get("WAHA_SESSION", "default")

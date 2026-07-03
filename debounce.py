@@ -11,11 +11,11 @@ _tasks: dict[str, asyncio.Task] = {}  # phone -> tarea en espera
 _ctx: dict[str, dict] = {}            # phone -> {frm, push}
 
 
-async def encolar(phone: str, frm: str, push: str, texto: str, procesar) -> None:
+async def encolar(phone: str, frm: str, push: str, texto: str, procesar, msg_id: str = "") -> None:
     """Acumula el mensaje y (re)programa el procesamiento. `procesar` es una
-    corutina procesar(frm, phone, push, texto_combinado)."""
+    corutina procesar(frm, phone, push, texto_combinado, msg_id)."""
     _buffers.setdefault(phone, []).append(texto)
-    _ctx[phone] = {"frm": frm, "push": push}
+    _ctx[phone] = {"frm": frm, "push": push, "msg_id": msg_id}  # msg_id del ultimo mensaje del bloque
 
     # cancelar la espera anterior: llego un mensaje nuevo, reiniciamos el reloj
     anterior = _tasks.get(phone)
@@ -35,4 +35,4 @@ async def _esperar_y_procesar(phone: str, procesar) -> None:
     ctx = _ctx.pop(phone, {})
     _tasks.pop(phone, None)
     if textos:
-        await procesar(ctx.get("frm"), phone, ctx.get("push"), "\n".join(textos))
+        await procesar(ctx.get("frm"), phone, ctx.get("push"), "\n".join(textos), ctx.get("msg_id", ""))

@@ -13,10 +13,14 @@ from config import WHATSAPP_VERIFY_TOKEN
 
 app = FastAPI(title="Chatbot Varka")
 
+# Marcador de version: subilo en cada cambio de prompt/logica para poder verificar,
+# desde GET /, que EasyPanel realmente deployo el codigo nuevo (y no una copia vieja).
+APP_VERSION = "2026-07-05-c"
+
 
 @app.get("/")
 async def health():
-    return {"status": "ok"}
+    return {"status": "ok", "version": APP_VERSION}
 
 
 @app.get("/webhook")

@@ -55,7 +55,7 @@ AGENDAR EL DIAGNOSTICO (tenes herramientas; NUNCA inventes horarios ni confirmes
 - Si la reserva falla, ofrecele otro horario o, como ultimo recurso, pasale el link: {CAL_LINK}
 - Podes usar 'calificar_lead' para priorizar (interno, NO se lo menciones a la persona).
 
-ESTILO (REGLA DURA DE LARGO, prioritaria): mensajes MUY CORTOS tipo WhatsApp. Lo normal es UNA sola oracion; como MAXIMO dos oraciones cortas, y solo si de verdad hace falta. Nunca superes las ~2 lineas de WhatsApp (apunta a menos de 300 caracteres; si te pasas, cortalo). PROHIBIDO: parrafos, bloques de texto, enumeraciones o listas de ejemplos (no encadenes 'precios, stock, pedidos, reportes...'; si das un ejemplo, UNO solo). UNA sola idea por mensaje. Como mucho UNA pregunta por mensaje, o ninguna (nunca dos signos de pregunta en el mismo mensaje). Es mejor mandar poco y que la persona pregunte, que abrumarla. El saludo inicial tambien va corto: presentate en UNA oracion, no expliques todo Varka de una. No repitas info que ya diste ni vuelvas a tirar tu propuesta en cada mensaje. NO termines cada mensaje ofreciendo agendar el diagnostico: varia los cierres, muchos mensajes cierran con un dato util, una idea o nada. Si preguntan precios, derivalos al diagnostico gratuito."""
+ESTILO (REGLA DURA DE LARGO, prioritaria, revisala antes de mandar): mensajes MUY CORTOS tipo WhatsApp. Lo normal es UNA sola oracion; como MAXIMO dos oraciones cortas, y solo si de verdad hace falta. Tope: menos de 300 caracteres SIEMPRE; si te pasas, borra hasta que entre. TODO en un solo bloque corto: PROHIBIDO usar saltos de linea, PROHIBIDO separar en parrafos, PROHIBIDO los bloques de texto, PROHIBIDO enumeraciones o listas de ejemplos (no encadenes 'precios, stock, pedidos, reportes...'; si das un ejemplo, UNO solo). UNA sola idea por mensaje: no juntes presentacion + explicacion + pregunta en el mismo mensaje. NUNCA te re-presentes ni repitas quien sos ni que hace Varka si ya lo dijiste antes en la charla; presentacion completa SOLO en el primer mensaje y en UNA oracion. Como mucho UNA pregunta por mensaje, o ninguna (nunca dos signos de pregunta en el mismo mensaje). Es mejor mandar poco y que la persona pregunte, que abrumarla. No repitas info que ya diste ni vuelvas a tirar tu propuesta en cada mensaje. NO termines cada mensaje ofreciendo agendar el diagnostico: varia los cierres, muchos mensajes cierran con un dato util, una idea o nada. Si preguntan precios, derivalos al diagnostico gratuito."""
 
 
 async def responder(historial: list[dict], texto: str, push_name: str) -> str:
@@ -92,7 +92,7 @@ async def responder(historial: list[dict], texto: str, push_name: str) -> str:
     for _ in range(5):
         resp = await client.messages.create(
             model=MODEL,
-            max_tokens=160,  # tope fisico como red de seguridad; el largo real lo fija el prompt (ESTILO)
+            max_tokens=130,  # tope fisico como red de seguridad; el largo real lo fija el prompt (ESTILO)
             system=system,
             messages=messages,
             tools=tools.SCHEMAS,

@@ -23,6 +23,10 @@ WAHA_SESSION = os.environ.get("WAHA_SESSION", "default")
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://your-project.supabase.co")
 
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
+
+# --- RAG: embeddings con Voyage AI + Supabase pgvector ---
+VOYAGE_API_KEY = os.environ.get("VOYAGE_API_KEY", "")
+MODEL_EMBED = os.environ.get("MODEL_EMBED", "voyage-3.5-lite")  # 1024 dimensiones
 CAL_LINK = os.environ.get("CAL_LINK", "https://cal.com/consultora-varka/diagnostico-gratuito")
 MODEL = os.environ.get("MODEL", "claude-haiku-4-5")
 

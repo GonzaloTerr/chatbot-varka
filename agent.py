@@ -4,6 +4,7 @@ from datetime import datetime
 
 import anthropic
 
+import rag
 import tools
 from config import ANTHROPIC_API_KEY, MODEL, CAL_LINK
 
@@ -66,6 +67,15 @@ async def responder(historial: list[dict], texto: str, push_name: str) -> str:
 
     hoy = datetime.now().strftime("%A %d/%m/%Y")
     contexto = f"{nota}\n[Hoy es {hoy}.]"
+
+    # RAG: recuperamos de la base de conocimiento los fragmentos relevantes a esta
+    # consulta y se los damos como fuente de verdad (precios, servicios, FAQ, etc.).
+    kb = await rag.buscar_contexto(texto)
+    if kb:
+        contexto += ("\n\n[INFORMACION DE VARKA relevante para esta consulta. Usala como "
+                     "fuente de verdad para datos concretos (precios, planes, tiempos, "
+                     "contacto); no inventes nada que no este aca. Adaptala a tu estilo de "
+                     "WhatsApp, no la copies textual:\n" + kb + "\n]")
 
     messages = []
     for h in historial:

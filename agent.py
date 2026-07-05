@@ -1,5 +1,6 @@
 """El agente: arma el contexto y llama a Claude (Haiku) para responder.
 Conversacion + memoria + caching + tools (agendar en Cal.com, calificar lead)."""
+import re
 from datetime import datetime
 
 import anthropic
@@ -70,6 +71,12 @@ async def responder(historial: list[dict], texto: str, push_name: str) -> str:
     hoy = datetime.now().strftime("%A %d/%m/%Y")
     contexto = f"{nota}\n[Hoy es {hoy}.]"
 
+    # Recordatorio de formato PEGADO al turno: Haiku obedece mucho mas una instruccion
+    # cerca de donde genera que la misma regla enterrada en el system prompt largo.
+    contexto += ("\n[FORMATO OBLIGATORIO de tu respuesta: UNA sola oracion (dos como maximo), "
+                 "TODO en un solo bloque, PROHIBIDO cualquier salto de linea o parrafo, menos de "
+                 "300 caracteres. Una sola idea. Como mucho UNA pregunta. Si te sale largo, acortalo.]")
+
     # RAG: recuperamos de la base de conocimiento los fragmentos relevantes a esta
     # consulta y se los damos como fuente de verdad (precios, servicios, FAQ, etc.).
     kb = await rag.buscar_contexto(texto)
@@ -93,7 +100,7 @@ async def responder(historial: list[dict], texto: str, push_name: str) -> str:
     for _ in range(5):
         resp = await client.messages.create(
             model=MODEL,
-            max_tokens=130,  # tope fisico como red de seguridad; el largo real lo fija el prompt (ESTILO)
+            max_tokens=110,  # tope fisico como red de seguridad; el largo real lo fija el prompt (ESTILO)
             system=system,
             messages=messages,
             tools=tools.SCHEMAS,
@@ -108,4 +115,9 @@ async def responder(historial: list[dict], texto: str, push_name: str) -> str:
                 resultados.append({"type": "tool_result", "tool_use_id": block.id, "content": salida})
         messages.append({"role": "user", "content": resultados})
 
-    return "".join(b.text for b in resp.content if b.type == "text").strip()
+    salida = "".join(b.text for b in resp.content if b.type == "text").strip()
+    # Garantia deterministica de "un solo bloque": Haiku a veces separa en parrafos
+    # aunque el prompt lo prohiba, asi que colapsamos saltos de linea a un espacio.
+    salida = re.sub(r"\s*\n+\s*", " ", salida)
+    salida = re.sub(r" {2,}", " ", salida).strip()
+    return salida

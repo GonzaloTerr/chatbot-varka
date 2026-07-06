@@ -1,21 +1,26 @@
 """Webhook que recibe los mensajes de WhatsApp (Cloud API de Meta) y dispara al
 agente. Maneja texto y voz (Groq), agrupa mensajes rapidos (debounce) y responde
 con indicador de 'escribiendo...'."""
+import logging
+
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import PlainTextResponse
 
 import agent
+import alerts
 import debounce
 import memory
 import transcribe
 import whatsapp
 from config import WHATSAPP_VERIFY_TOKEN
 
+log = logging.getLogger("main")
+
 app = FastAPI(title="Chatbot Varka")
 
 # Marcador de version: subilo en cada cambio de prompt/logica para poder verificar,
 # desde GET /, que EasyPanel realmente deployo el codigo nuevo (y no una copia vieja).
-APP_VERSION = "2026-07-05-e"
+APP_VERSION = "2026-07-06-a"
 
 
 @app.get("/")
@@ -35,12 +40,18 @@ async def verificar(request: Request):
 
 async def _procesar(to: str, phone: str, push: str, texto: str, msg_id: str) -> None:
     """Se ejecuta UNA vez por bloque de mensajes (despues del debounce).
-    `to` es el wa_id al que se responde; `phone` es la clave canonica de memoria."""
-    historial = await memory.cargar_historial(phone)
-    respuesta = await agent.responder(historial, texto, push)
-    if respuesta:
-        await whatsapp.enviar_con_tipeo(to, respuesta, msg_id)  # "escribiendo..." + pausa humana
-        await memory.guardar(phone, push, texto, respuesta)
+    `to` es el wa_id al que se responde; `phone` es la clave canonica de memoria.
+    Corre dentro de un asyncio.Task (debounce): sin este try/except, cualquier fallo
+    aca se tragaba en silencio y el cliente quedaba sin respuesta y sin aviso."""
+    try:
+        historial = await memory.cargar_historial(phone)
+        respuesta = await agent.responder(historial, texto, push)
+        if respuesta:
+            await whatsapp.enviar_con_tipeo(to, respuesta, msg_id)  # "escribiendo..." + pausa humana
+            await memory.guardar(phone, push, texto, respuesta)
+    except Exception as e:
+        log.exception("Fallo procesando el mensaje de %s (%s)", push, phone)
+        await alerts.avisar_error(f"Mensaje de {push} ({phone})", e)
 
 
 @app.post("/webhook")

@@ -34,3 +34,10 @@ MODEL = os.environ.get("MODEL", "claude-haiku-4-5")
 CAL_API_KEY = os.environ.get("CAL_API_KEY", "")
 CAL_EVENT_TYPE_ID = os.environ.get("CAL_EVENT_TYPE_ID", "")  # lo completamos juntos
 TIMEZONE = os.environ.get("TIMEZONE", "America/Argentina/Buenos_Aires")
+
+# --- Alertas internas (email via Resend) ---
+# Si el procesamiento de un mensaje falla, Sofia avisa a este mail. Se usa email y
+# NO WhatsApp a proposito: si lo que se rompio es el propio WhatsApp, un aviso por
+# WhatsApp tampoco saldria. Cargar RESEND_API_KEY en EasyPanel (el mismo valor que en n8n).
+RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
+ALERT_EMAIL = os.environ.get("ALERT_EMAIL", "consultoravarka@gmail.com")

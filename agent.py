@@ -77,9 +77,26 @@ async def responder(historial: list[dict], texto: str, push_name: str) -> str:
                  "TODO en un solo bloque, PROHIBIDO cualquier salto de linea o parrafo, menos de "
                  "300 caracteres. Una sola idea. Como mucho UNA pregunta. Si te sale largo, acortalo.]")
 
+    # Ya sabemos como se llama: es el nombre del perfil de WhatsApp. Sin esto, Claude
+    # se lo pregunta igual porque el schema de agendar_diagnostico lo pide obligatorio.
+    if push_name:
+        contexto += (f"\n[DATO QUE YA TENES: esta persona se llama {push_name}. Usalo como "
+                     "'nombre' al agendar y NO se lo preguntes. Lo unico que te falta pedirle "
+                     "para reservar es el email.]")
+
     # RAG: recuperamos de la base de conocimiento los fragmentos relevantes a esta
     # consulta y se los damos como fuente de verdad (precios, servicios, FAQ, etc.).
-    kb = await rag.buscar_contexto(texto)
+    #
+    # El embedding se calcula SIN historial, asi que una repregunta corta ("y con la
+    # web?") sola no cae cerca de ninguna seccion y la busqueda vuelve vacia: Claude
+    # igual contesta —tiene el historial— pero improvisa sin fuente. Para evitarlo le
+    # pegamos la consulta anterior del usuario, acotada para que no tape a la actual.
+    consulta = texto
+    if historial:
+        previa = (historial[-1].get("mensaje") or "").strip()
+        if previa:
+            consulta = f"{previa[:200]} {texto}"
+    kb = await rag.buscar_contexto(consulta)
     if kb:
         contexto += ("\n\n[INFORMACION DE VARKA relevante para esta consulta. Usala como "
                      "fuente de verdad para datos concretos (precios, planes, tiempos, "
@@ -100,7 +117,13 @@ async def responder(historial: list[dict], texto: str, push_name: str) -> str:
     for _ in range(5):
         resp = await client.messages.create(
             model=MODEL,
-            max_tokens=110,  # tope fisico como red de seguridad; el largo real lo fija el prompt (ESTILO)
+            # OJO: max_tokens limita TODA la respuesta, incluidas las llamadas a tools.
+            # Con el tope viejo de 110 la llamada a agendar_diagnostico (nombre + email +
+            # inicio ISO + notas) se cortaba a la mitad: stop_reason quedaba en "max_tokens"
+            # en vez de "tool_use", el loop salia sin reservar y Sofia repreguntaba los
+            # datos. El largo del mensaje al cliente ya no depende de aca: lo garantiza
+            # _acortar() mas abajo.
+            max_tokens=600,
             system=system,
             messages=messages,
             tools=tools.SCHEMAS,
@@ -120,4 +143,19 @@ async def responder(historial: list[dict], texto: str, push_name: str) -> str:
     # aunque el prompt lo prohiba, asi que colapsamos saltos de linea a un espacio.
     salida = re.sub(r"\s*\n+\s*", " ", salida)
     salida = re.sub(r" {2,}", " ", salida).strip()
-    return salida
+    return _acortar(salida)
+
+
+def _acortar(texto: str, tope: int = 300) -> str:
+    """Garantia deterministica del largo. Antes lo daba el max_tokens chico, pero ese
+    tope tambien recortaba las llamadas a tools, asi que el limite se aplica aca sobre
+    el texto final. Corta en el ultimo final de oracion que entre; si no hay ninguno,
+    corta en la ultima palabra completa."""
+    if len(texto) <= tope:
+        return texto
+    recorte = texto[:tope]
+    corte = max(recorte.rfind(". "), recorte.rfind("? "), recorte.rfind("! "))
+    if corte > tope * 0.5:
+        return recorte[:corte + 1].strip()
+    espacio = recorte.rfind(" ")
+    return (recorte[:espacio] if espacio > 0 else recorte).strip()

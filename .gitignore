@@ -4,3 +4,7 @@ __pycache__/
 venv/
 .venv/
 _test.py
+
+# Exportaciones de conversaciones reales con clientes: NO van al repo
+charlas.html
+Ver charlas de Sofia.bat

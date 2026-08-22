@@ -7,6 +7,7 @@ import anthropic
 
 import rag
 import tools
+import trazas
 from config import ANTHROPIC_API_KEY, MODEL, CAL_LINK
 
 client = anthropic.AsyncAnthropic(api_key=ANTHROPIC_API_KEY)
@@ -60,7 +61,18 @@ AGENDAR EL DIAGNOSTICO (tenes herramientas; NUNCA inventes horarios ni confirmes
 ESTILO (REGLA DURA DE LARGO, prioritaria, revisala antes de mandar): mensajes MUY CORTOS tipo WhatsApp. Lo normal es UNA sola oracion; como MAXIMO dos oraciones cortas, y solo si de verdad hace falta. Tope: menos de 300 caracteres SIEMPRE; si te pasas, borra hasta que entre. TODO en un solo bloque corto: PROHIBIDO usar saltos de linea, PROHIBIDO separar en parrafos, PROHIBIDO los bloques de texto, PROHIBIDO enumeraciones o listas de ejemplos (no encadenes 'precios, stock, pedidos, reportes...'; si das un ejemplo, UNO solo). UNA sola idea por mensaje: no juntes presentacion + explicacion + pregunta en el mismo mensaje. NUNCA te re-presentes ni repitas quien sos ni que hace Varka si ya lo dijiste antes en la charla; presentacion completa SOLO en el primer mensaje y en UNA oracion. Como mucho UNA pregunta por mensaje, o ninguna (nunca dos signos de pregunta en el mismo mensaje). Es mejor mandar poco y que la persona pregunte, que abrumarla. No repitas info que ya diste ni vuelvas a tirar tu propuesta en cada mensaje. NO termines cada mensaje ofreciendo agendar el diagnostico: varia los cierres, muchos mensajes cierran con un dato util, una idea o nada. Si preguntan precios, derivalos al diagnostico gratuito."""
 
 
-async def responder(historial: list[dict], texto: str, push_name: str) -> str:
+async def responder(historial: list[dict], texto: str, push_name: str,
+                    phone_key: str = "") -> str:
+    """Envoltorio de trazado. La logica esta en _responder y no cambio: si el
+    trazado esta apagado (sin claves de LangFuse), esto es una llamada directa."""
+    with trazas.conversacion(session_id=phone_key, mensaje=texto,
+                             push_name=push_name) as traza:
+        respuesta = await _responder(historial, texto, push_name)
+        trazas.salida(traza, respuesta)
+        return respuesta
+
+
+async def _responder(historial: list[dict], texto: str, push_name: str) -> str:
     # Control deterministico del saludo: si ya hay historial, prohibido re-saludar.
     if historial:
         nota = ("[ESTADO: ya venis conversando con esta persona. PROHIBIDO saludar, "
@@ -96,7 +108,12 @@ async def responder(historial: list[dict], texto: str, push_name: str) -> str:
         previa = (historial[-1].get("mensaje") or "").strip()
         if previa:
             consulta = f"{previa[:200]} {texto}"
-    kb = await rag.buscar_contexto(consulta)
+    with trazas.paso("rag-buscar", "retriever", entrada={"consulta": consulta}) as obs:
+        kb = await rag.buscar_contexto(consulta)
+        # Registrar si vino VACIO es la senal que hoy no existe: cuando Voyage se
+        # agota, el RAG devuelve vacio, Sofia contesta igual sin fuente y nadie se
+        # entera. Aca queda anotado en cada conversacion.
+        trazas.salida(obs, {"hubo_contexto": bool(kb), "caracteres": len(kb or "")})
     if kb:
         contexto += ("\n\n[INFORMACION DE VARKA relevante para esta consulta. Usala como "
                      "fuente de verdad para datos concretos (precios, planes, tiempos, "
@@ -134,7 +151,9 @@ async def responder(historial: list[dict], texto: str, push_name: str) -> str:
         resultados = []
         for block in resp.content:
             if block.type == "tool_use":
-                salida = await tools.ejecutar(block.name, block.input)
+                with trazas.paso(block.name, "tool", entrada=block.input) as obs:
+                    salida = await tools.ejecutar(block.name, block.input)
+                    trazas.salida(obs, salida)
                 resultados.append({"type": "tool_result", "tool_use_id": block.id, "content": salida})
         messages.append({"role": "user", "content": resultados})
 

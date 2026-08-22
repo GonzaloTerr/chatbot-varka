@@ -41,3 +41,13 @@ TIMEZONE = os.environ.get("TIMEZONE", "America/Argentina/Buenos_Aires")
 # WhatsApp tampoco saldria. Cargar RESEND_API_KEY en EasyPanel (el mismo valor que en n8n).
 RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
 ALERT_EMAIL = os.environ.get("ALERT_EMAIL", "consultoravarka@gmail.com")
+
+# --- LangFuse (trazado / observabilidad) ---
+# Si las dos claves quedan vacias, el trazado queda APAGADO y el agente corre
+# exactamente igual que antes. Vaciar la publica en EasyPanel es el rollback:
+# apaga el trazado sin revertir codigo ni redeploy de emergencia.
+# El SDK las lee del entorno por su cuenta; aca solo las leemos para saber si
+# esta activo. El nombre es LANGFUSE_BASE_URL (no LANGFUSE_HOST, que es el viejo).
+LANGFUSE_PUBLIC_KEY = os.environ.get("LANGFUSE_PUBLIC_KEY", "")
+LANGFUSE_SECRET_KEY = os.environ.get("LANGFUSE_SECRET_KEY", "")
+LANGFUSE_BASE_URL = os.environ.get("LANGFUSE_BASE_URL", "https://cloud.langfuse.com")

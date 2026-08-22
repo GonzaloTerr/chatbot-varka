@@ -2,6 +2,7 @@
 agente. Maneja texto y voz (Groq), agrupa mensajes rapidos (debounce) y responde
 con indicador de 'escribiendo...'."""
 import logging
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import PlainTextResponse
@@ -10,17 +11,27 @@ import agent
 import alerts
 import debounce
 import memory
+import trazas
 import transcribe
 import whatsapp
 from config import WHATSAPP_VERIFY_TOKEN
 
 log = logging.getLogger("main")
 
-app = FastAPI(title="Chatbot Varka")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Enciende el trazado al arrancar y vacia el buffer al apagar. Si no hay
+    claves de LangFuse, las dos llamadas no hacen nada."""
+    trazas.iniciar()
+    yield
+    trazas.cerrar()
+
+
+app = FastAPI(title="Chatbot Varka", lifespan=lifespan)
 
 # Marcador de version: subilo en cada cambio de prompt/logica para poder verificar,
 # desde GET /, que EasyPanel realmente deployo el codigo nuevo (y no una copia vieja).
-APP_VERSION = "2026-07-25-a"
+APP_VERSION = "2026-08-22-a"
 
 
 @app.get("/")
@@ -45,7 +56,9 @@ async def _procesar(to: str, phone: str, push: str, texto: str, msg_id: str) -> 
     aca se tragaba en silencio y el cliente quedaba sin respuesta y sin aviso."""
     try:
         historial = await memory.cargar_historial(phone)
-        respuesta = await agent.responder(historial, texto, push)
+        # phone_key va como session_id de la traza: agrupa todos los mensajes
+        # de una persona en una sola conversacion, y cruza con Supabase.
+        respuesta = await agent.responder(historial, texto, push, phone_key=phone)
         if respuesta:
             await whatsapp.enviar_con_tipeo(to, respuesta, msg_id)  # "escribiendo..." + pausa humana
             await memory.guardar(phone, push, texto, respuesta)

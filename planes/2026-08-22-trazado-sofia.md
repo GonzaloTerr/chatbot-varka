@@ -156,3 +156,28 @@ Construido: `trazas.py` (nuevo), `agent.py` (envuelto, lógica intacta), `main.p
    entrada —el 63%— pagados a tarifa plena en cada mensaje. Causa sin diagnosticar.
 2. ⚠️ **Las pruebas agotaron la cuota de Voyage** (429). Es el modo de falla conocido:
    el RAG devuelve vacío y Sofía sigue contestando sin fuente, en silencio.
+
+## Deploy (22/08/2026)
+
+Hecho en dos etapas, cada una verificada por separado:
+
+1. **Código con el trazado apagado** — commit `6c9fc1b`, deploy por API de EasyPanel
+   (`autoDeploy` está en false, el push solo no alcanza). Verificado:
+   `APP_VERSION = 2026-08-22-a`, health OK y el webhook de verificación de Meta
+   devuelve el challenge con el token real.
+2. **Las tres variables + encendido** — `updateEnv` agregando al bloque existente sin
+   reconstruirlo; verificado que ninguna de las 17 variables previas se perdió.
+   Commit `443524c` solo para subir el marcador. Verificado:
+   `APP_VERSION = 2026-08-22-b`.
+
+✅ **CONFIRMADO EN PRODUCCIÓN (22/08/2026, 23:59 UTC).** Un mensaje real de WhatsApp
+generó su traza completa: `sofia-responder` → `rag-buscar` (con contexto, 2.974
+caracteres) + `anthropic.chat` (`claude-haiku-4-5`, 5.757 in / 60 out). Latencia 2,1 s,
+costo USD 0,0061.
+
+⚠️ **Las trazas NO aparecen al instante:** el SDK las manda en lotes. Entre el mensaje y
+su traza en la interfaz pasaron un par de minutos. Es el comportamiento normal, no una
+falla — no salir a diagnosticar antes de esperar.
+
+⚠️ **Rotar el token de deploy del servicio** (el de `deploymentUrl`): quedó impreso en
+la sesión del 22/08.

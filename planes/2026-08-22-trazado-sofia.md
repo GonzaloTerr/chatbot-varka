@@ -179,5 +179,6 @@ costo USD 0,0061.
 su traza en la interfaz pasaron un par de minutos. Es el comportamiento normal, no una
 falla — no salir a diagnosticar antes de esperar.
 
-⚠️ **Rotar el token de deploy del servicio** (el de `deploymentUrl`): quedó impreso en
-la sesión del 22/08.
+⛔ **El token de deploy NO se rota — decisión de Gonzalo del 22/08/2026.** Quedó impreso
+en esa sesión; lo único que permite es disparar un redeploy del servicio, no acceder a
+datos ni a claves. No volver a proponerlo.

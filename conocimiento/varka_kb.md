@@ -8,19 +8,19 @@
 
 ## Qué es Varka
 
-Varka es una consultora de inteligencia artificial para pymes, fundada en 2024 por Gonzalo Terrones. Implementa chatbots, automatizaciones y estrategias de IA para pequeñas y medianas empresas. La idea central: que una pyme pueda usar IA de verdad, sin equipo técnico propio y sin gastar como una gran empresa. Varka se encarga de todo el desarrollo e implementación; el cliente solo cuenta cómo funciona su negocio.
+Varka es una consultora de inteligencia artificial para empresas, fundada en 2024 por Gonzalo Terrones. Implementa chatbots, automatizaciones y estrategias de IA para empresas de todos los tamaños, desde emprendimientos y pymes hasta compañías grandes. La idea central: que una empresa pueda usar IA de verdad, sin necesidad de un equipo técnico propio. Varka se encarga de todo el desarrollo e implementación; el cliente solo cuenta cómo funciona su negocio.
 
 ## A quién le sirve Varka y en qué zonas trabaja
 
-Varka trabaja con emprendedores unipersonales, startups y pymes de hasta 100 personas, principalmente en Argentina, Uruguay y Chile, y también de forma remota con otros países de habla hispana. El tamaño no importa; lo que importa es querer crecer y optimizar el negocio. Casos típicos: comercios, e-commerce, distribuidoras, inmobiliarias, clínicas, estudios profesionales, gastronomía y emprendedores que quieren atender mejor, vender más o sacarse de encima tareas manuales.
+Varka trabaja con empresas de todos los tamaños —emprendedores, startups, pymes y compañías grandes—, principalmente en Argentina, Uruguay y Chile, y también de forma remota con otros países de habla hispana. El tamaño no importa; lo que importa es querer crecer y optimizar el negocio. Casos típicos: comercios, e-commerce, distribuidoras, inmobiliarias, clínicas, estudios profesionales, gastronomía y emprendedores que quieren atender mejor, vender más o sacarse de encima tareas manuales.
 
 ## Servicio: Chatbots y asistentes virtuales
 
-Asistentes inteligentes para WhatsApp, web o Instagram que atienden a los clientes las 24 horas. Responden consultas, dan información de productos y servicios, agendan turnos o reuniones y derivan a una persona cuando hace falta. Se personalizan con la información y el tono de cada negocio. Precio de referencia: desde USD 800.
+Asistentes inteligentes para WhatsApp, web o Instagram que atienden a los clientes las 24 horas. Responden consultas, dan información de productos y servicios, agendan turnos o reuniones y derivan a una persona cuando hace falta. Se personalizan con la información y el tono de cada negocio. Precio de referencia: desde USD 1.500 de setup + USD 200 por mes para WhatsApp; desde USD 1.200 + USD 150 por mes si va embebido en la web.
 
 ## Servicio: Automatización de procesos
 
-Varka automatiza la trastienda operativa de la pyme: precios, stock, remitos, reportes, seguimientos, carga y traspaso de datos entre sistemas, envío de emails. No es "otro chatbot": estas automatizaciones ejecutan acciones reales en los sistemas del negocio (cargan un pedido, actualizan un precio, concilian un remito), esa operación de cada pyme que ningún software estándar termina de resolver. El objetivo es que el equipo deje de perder horas en tareas mecánicas y repetitivas. Precio de referencia: desde USD 500, y se cotiza a medida según el alcance del proyecto.
+Varka automatiza la trastienda operativa de la empresa: precios, stock, remitos, reportes, seguimientos, carga y traspaso de datos entre sistemas, envío de emails. No es "otro chatbot": estas automatizaciones ejecutan acciones reales en los sistemas del negocio (cargan un pedido, actualizan un precio, concilian un remito), esa operación propia de cada negocio que ningún software estándar termina de resolver. El objetivo es que el equipo deje de perder horas en tareas mecánicas y repetitivas. Precio de referencia: automatizaciones sueltas por flujo desde USD 190 (simple), USD 390 (media) o USD 790 (compleja); un proyecto de automatización interna completo arranca desde USD 2.000 de setup + USD 400 por mes. Se cotiza a medida según el alcance.
 
 ## Servicio: Agentes de IA que ejecutan acciones
 
@@ -44,6 +44,20 @@ El pack de 10 informes es el recomendado.
 ## Servicio: Desarrollo de aplicaciones de IA a medida
 
 Además de sus productos, Varka desarrolla aplicaciones de IA a medida para cada cliente. Si un negocio necesita una herramienta distinta a las que Varka ya ofrece, se puede construir desde cero según su caso: agentes de IA que investigan y redactan, sistemas que analizan datos y generan informes, asistentes internos, herramientas que se conectan con las APIs y sistemas que ya usa la empresa, y más. La app de diagnósticos es un ejemplo concreto de este tipo de desarrollo. Cada proyecto se cotiza con precio fijo después del diagnóstico, según el alcance.
+
+## Servicio: Auditoría de ciberseguridad y pentesting
+
+Varka hace auditorías de seguridad autorizadas sobre la aplicación, el e-commerce o la API del cliente: busca las vulnerabilidades antes de que las encuentre un atacante. Cubre las fallas más frecuentes (OWASP Top 10) y también los errores de lógica de negocio, que son los que ningún escáner automático detecta. Se entrega un informe claro, sin tecnicismos, con los hallazgos ordenados por gravedad y un plan de remediación priorizado: qué arreglar primero y por qué. Sirve especialmente cuando el negocio maneja datos de clientes, cobros online o información sensible. Precio: a medida, según el tamaño del sistema a auditar. Más información en varka.tech/ciberseguridad-ia
+
+## Servicio: Posicionamiento en IA (GEO)
+
+GEO —Generative Engine Optimization— es el trabajo de lograr que ChatGPT, Perplexity y Gemini nombren y citen a la empresa cuando alguien les pregunta por su rubro. Es el equivalente al SEO, pero para las respuestas que da la inteligencia artificial en vez de la lista de resultados de Google. La diferencia importa: en una respuesta de IA no hay diez resultados para elegir, hay una sola respuesta que menciona dos o tres empresas.
+
+El servicio incluye una medición inicial con un corpus de 25 consultas reales del rubro corridas en los tres motores, la preparación del sitio para que los modelos lo puedan leer y citar (datos estructurados, archivo llms.txt, permisos de rastreo), la presencia consistente de la empresa en los directorios que la IA consulta, contenido citable, y un re-test mensual fechado que muestra la evolución.
+
+Precio: la auditoría inicial arranca desde USD 450 y se descuenta del proyecto si el cliente sigue; los planes mensuales se cotizan según el rubro y la competencia. Sin permanencia mínima.
+
+Sobre los tiempos, que es lo que más se pregunta: se mide en semanas, no en días. El primer movimiento suele aparecer cerca de la cuarta semana, y hay un orden que conviene explicar: primero se mueven las consultas de marca —el modelo pasa a saber quién es la empresa y a citar su página— y bastante después las consultas del rubro, que son las más disputadas y las últimas en caer. Nadie puede garantizar aparecer primero en una consulta puntual: los modelos deciden qué citan y cambian sin aviso. Lo que sí se puede es medir dónde está la empresa hoy y demostrar la evolución con datos fechados. Más información en varka.tech/posicionamiento-ia
 
 ## Diagnóstico gratuito
 
@@ -92,7 +106,7 @@ Varka la funda y opera Gonzalo Terrones, que combina más de 20 años dirigiendo
 
 ## Qué hace diferente a Varka
 
-- Enfoque 100% en pymes: soluciones a la medida del presupuesto de un negocio chico o mediano, no de una corporación.
+- Soluciones a la medida de cada empresa: se adaptan al tamaño y al presupuesto, de un comercio chico a una compañía grande.
 - Se hace cargo de todo el proceso técnico; el cliente no necesita saber de tecnología.
 - Se integra con las herramientas que el negocio ya usa, sin obligar a cambiar de sistema.
 - Diagnóstico gratuito antes de cobrar nada: primero se demuestra el valor.
@@ -101,9 +115,29 @@ Varka la funda y opera Gonzalo Terrones, que combina más de 20 años dirigiendo
 
 ## Detalle de precios
 
-- Chatbots y asistentes virtuales: desde USD 800.
-- Automatización de procesos: desde USD 500.
-- Asesoría estratégica en IA: desde USD 120 por sesión. Cada sesión dura 1 hora.
+Cada servicio se cobra con un **setup único** más un **abono mensual** de mantenimiento y mejoras. No hay permanencia mínima. Los valores son de referencia y el precio final sale del diagnóstico:
+
+- Chatbot de WhatsApp: desde USD 1.500 de setup + USD 200 por mes.
+- Chatbot embebido en la web: desde USD 1.200 de setup + USD 150 por mes.
+- Recepcionista IA por rubro (clínicas, estética, gastronomía, inmobiliarias): desde USD 1.800 de setup + USD 220 por mes.
+- Agente de voz telefónico: desde USD 2.500 de setup + USD 300 por mes.
+- Automatización de procesos internos y bases de conocimiento a medida: desde USD 2.000 de setup + USD 400 por mes.
+- Agente de soporte interno para empleados: desde USD 1.500 de setup + USD 250 por mes.
+- Automatización contable y fiscal: desde USD 1.500 de setup + USD 300 por mes.
+- Automatizaciones sueltas por flujo: simple USD 190, media USD 390, compleja desde USD 790.
+- Captación automatizada de leads: desde USD 700 de setup + USD 300 por mes.
+- Reactivación de base de clientes dormida: USD 400 pago único.
+- Recuperación de carritos abandonados: desde USD 500 de setup + USD 200 por mes.
+- Cotizador automático de presupuestos: desde USD 600 de setup + USD 150 por mes.
+- Reportería y tableros automáticos: desde USD 450 de setup + USD 130 por mes.
+- Reseñas de Google y reputación: desde USD 300 de setup + USD 100 por mes.
+- Contenido para redes: plan Esencial desde USD 300 de setup + USD 150 por mes; plan Pro desde USD 450 + USD 300 por mes; con avatar de IA desde USD 700 + USD 400 por mes.
+- Blog y SEO automatizado: desde USD 350 de setup + USD 180 por mes.
+- Posicionamiento en IA (GEO): auditoría desde USD 450, que se descuenta del proyecto si el cliente sigue. El trabajo mensual se cotiza según cuán disputado esté el rubro: no cuesta lo mismo aparecer en una categoría con cuatro competidores que en una con cuarenta.
+- Auditoría de ciberseguridad: a medida, según el tamaño del sistema.
+- Desarrollo web: landing desde USD 400, sitio institucional desde USD 700, e-commerce desde USD 1.200.
+- Asesoría estratégica en IA: desde USD 120 por sesión de 1 hora.
+- Workshop de IA para equipos (2 a 4 horas): desde USD 400 por sesión.
 
 Cada proyecto se cotiza con precio fijo y cerrado: la propuesta detalla los entregables, el precio final y el plazo estimado, sin presupuestos vagos ni sorpresas.
 
@@ -111,13 +145,13 @@ Cada proyecto se cotiza con precio fijo y cerrado: la propuesta detalla los entr
 
 Se trabaja con un esquema 50/50: 50% de adelanto para iniciar el proyecto y el 50% restante al momento de la entrega. Los precios están en dólares (USD); se puede abonar el equivalente en pesos al tipo de cambio del día. Medios de pago: transferencia, Mercado Pago y cripto, entre otros. Quien prefiera pagar con tarjeta puede hacerlo en cuotas a través de Mercado Pago (las cuotas y su interés las maneja la tarjeta/Mercado Pago).
 
-## Planes de mantenimiento mensual (opcional, después de la entrega)
+## Abono mensual (cómo funciona)
 
-Después de implementar una solución, el cliente puede contratar un plan de soporte mensual para mantenimiento, mejoras y asesoría continua:
+No hay planes de soporte con nombre ni escalones fijos. Cada servicio implementado tiene su propio abono mensual, que ya figura en el detalle de precios de arriba y cubre el monitoreo, el soporte y las mejoras de esa solución. Un cliente con dos soluciones implementadas paga los dos abonos.
 
-- Plan básico — USD 200/mes: mantenimiento de 1 solución implementada + 2 horas de atención mensual.
-- Plan estándar — USD 400/mes: 1 sesión de asesoría mensual incluida + 4 horas de atención mensual.
-- Plan avanzado — USD 700/mes: asesoría estratégica mensual + 8 horas de atención mensual.
+No hay permanencia mínima: el abono se puede dar de baja cuando el cliente quiera.
+
+Los costos de infraestructura y de las APIs (el servidor, la API de la IA, la mensajería de WhatsApp) los paga el cliente aparte y quedan a su nombre, así que nunca queda atado a un intermediario. La única excepción es el servicio de posicionamiento en IA (GEO), donde las claves de los buscadores con IA las pone Varka.
 
 # Objeciones frecuentes
 
@@ -183,9 +217,9 @@ No. Varka se encarga de todo el desarrollo e implementación. Vos solo contás c
 
 Una consultora de IA analiza tu negocio, identifica dónde la inteligencia artificial puede ahorrarte tiempo o aumentar ventas, y se encarga de implementar esas soluciones. En Varka cubrimos todo el proceso: diagnóstico, desarrollo, capacitación y soporte.
 
-## ¿Trabajan con pymes de cualquier rubro?
+## ¿Trabajan con empresas de cualquier rubro y tamaño?
 
-Sí. Varka trabaja con comercios, e-commerce, gastronomía, servicios profesionales y emprendedores. Adaptamos la solución de IA a la realidad y el presupuesto de cada negocio.
+Sí. Varka trabaja con comercios, e-commerce, gastronomía, servicios profesionales, emprendedores y empresas grandes. Adaptamos la solución de IA a la realidad y el presupuesto de cada negocio.
 
 ## ¿El diagnóstico realmente es gratuito y sin compromiso?
 

@@ -5,3 +5,4 @@ anthropic==0.109.2
 python-dotenv==1.2.2
 langfuse==4.14.4
 opentelemetry-instrumentation-anthropic==0.62.3
+tzdata==2026.4

@@ -1,6 +1,7 @@
 """Herramientas (tools) que puede usar Sofia: ver agenda, reservar en Cal.com, calificar leads.
 Cada tool tiene: (1) un schema para Claude y (2) una funcion async que la ejecuta."""
 from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 
 import httpx
 
@@ -115,7 +116,9 @@ async def agendar_diagnostico(nombre: str, email: str, inicio: str, notas: str =
         d = r.json().get("data", {})
         ini = d.get("start", inicio)
         try:
-            local = datetime.fromisoformat(ini.replace("Z", "+00:00")).astimezone()
+            # A TIMEZONE explicito: .astimezone() sin argumento usa la zona del sistema,
+            # que en el contenedor es UTC, y confirmaba las 16:00 como "a las 19:00".
+            local = datetime.fromisoformat(ini.replace("Z", "+00:00")).astimezone(ZoneInfo(TIMEZONE))
             cuando = f"{_DIAS_ES[local.weekday()]} {local.strftime('%d/%m a las %H:%M')}"
         except Exception:
             cuando = ini

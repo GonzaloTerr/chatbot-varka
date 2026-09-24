@@ -44,7 +44,11 @@ La base de conocimiento vive en `conocimiento/varka_kb.md`.
 
 **Las alertas van por email, no por WhatsApp.** A propósito: si lo que se rompió es justamente WhatsApp, un aviso por WhatsApp tampoco saldría.
 
-**El modelo es Haiku (`claude-haiku-4-5`) y no obedece las reglas de estilo del prompt.** Ignora las instrucciones de largo y de saltos de línea aunque estén escritas. Por eso el estilo se fuerza **por código** en `agent.py`: se colapsan los saltos de línea a un espacio y hay un `max_tokens=110` como red de seguridad física. El voseo y el no repreguntar sí respondieron al prompt; el formato no. Si se cambia el modelo, revisar si ese post-proceso sigue haciendo falta.
+**El modelo es Haiku (`claude-haiku-4-5`) y no obedece las reglas de estilo del prompt.** Ignora las instrucciones de largo y de saltos de línea aunque estén escritas. Por eso el estilo se fuerza **por código** en `agent.py`: se colapsan los saltos de línea a un espacio y `_acortar()` corta el texto final en 300 caracteres. (El `max_tokens` es 600 y no es una palanca de estilo: con 110 cortaba las llamadas a herramientas.) El voseo y el no repreguntar sí respondieron al prompt; el formato no. Si se cambia el modelo, revisar si ese post-proceso sigue haciendo falta.
+
+**Hay tres guardas por código en `agent.py`** (reserva falsa, texto vacío, groserías/vosotros), por el mismo motivo. En LangFuse aparecen como observaciones tipo `guardrail`. No nombrar en el prompt las palabras prohibidas: nombrarlas las provoca.
+
+**Antes de desplegar un cambio de prompt, modelo o lógica: correr la compuerta de evals.** `venv\Scripts\python.exe evals\correr.py --variant vN --reps 1 --sin-juez --gate` (~USD 0,20). Si dice `NO PASA`, no se despliega. Todo sobre los evals en [evals/README.md](evals/README.md).
 
 **`APP_VERSION` en `main.py` es un marcador de deploy.** Subirlo en cada cambio de prompt o de lógica. Después del redeploy, pegarle a `GET /` y confirmar que devuelve la versión nueva: es la única forma de saber que EasyPanel levantó el código y no una copia vieja.
 

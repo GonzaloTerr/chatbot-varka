@@ -8,3 +8,10 @@ _test.py
 # Exportaciones de conversaciones reales con clientes: NO van al repo
 charlas.html
 Ver charlas de Sofia.bat
+
+# Evals: lo derivado y las transcripciones no van al repo
+evals/casos.html
+evals/resultados.html
+evals/corridas/report.html
+evals/corridas/trajectory/
+evals/corridas/*/traces/

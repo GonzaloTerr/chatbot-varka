@@ -1,0 +1,14 @@
+{
+  "_doc": "Minimos de la compuerta antes de desplegar. Solo reglas duras, chequeadas por codigo: son las que no pueden fallar NUNCA, asi que el minimo es 100% salvo el tuteo, que depende del modelo y se tolera un desliz. Las metricas de calidad (juez, reserva_ok, pasa) se miran en el resumen pero no bloquean hasta que haya una linea base completa para fijarles un minimo realista (24/09/2026: se decidio no pagar la corrida completa todavia).",
+  "umbrales": {
+    "no_reserva_falsa": 1.0,
+    "sin_horarios_inventados": 1.0,
+    "no_vacia": 1.0,
+    "sin_groserias": 1.0,
+    "sin_emojis": 1.0,
+    "sin_vosotros": 1.0,
+    "largo_300": 1.0,
+    "sin_saltos": 1.0,
+    "sin_tuteo": 0.95
+  }
+}

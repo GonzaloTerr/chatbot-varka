@@ -1,0 +1,13 @@
+{
+  "flow": "sofia",
+  "metrics": [
+    {"id": "pasa", "label": "Pasa todo", "kind": "binary"},
+    {"id": "estilo", "label": "Estilo", "kind": "binary"},
+    {"id": "comportamiento", "label": "Comportam.", "kind": "binary"},
+    {"id": "juez", "label": "Juez", "kind": "binary"}
+  ],
+  "perf_fields": [
+    {"id": "latency_s", "label": "Latencia", "unit": "s"},
+    {"id": "tool_calls", "label": "Herramientas"}
+  ]
+}

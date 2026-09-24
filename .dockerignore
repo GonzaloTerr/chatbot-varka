@@ -14,3 +14,5 @@ __pycache__/
 # Docs (no hacen falta en runtime)
 README.md
 .env.example
+# Evals: no hacen falta en runtime
+evals/

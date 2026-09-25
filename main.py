@@ -1,6 +1,9 @@
 """Webhook que recibe los mensajes de WhatsApp (Cloud API de Meta) y dispara al
 agente. Maneja texto y voz (Groq), agrupa mensajes rapidos (debounce) y responde
 con indicador de 'escribiendo...'."""
+import hashlib
+import hmac
+import json
 import logging
 from contextlib import asynccontextmanager
 
@@ -14,7 +17,7 @@ import memory
 import trazas
 import transcribe
 import whatsapp
-from config import WHATSAPP_VERIFY_TOKEN
+from config import META_APP_SECRET, WHATSAPP_VERIFY_TOKEN
 
 log = logging.getLogger("main")
 
@@ -22,6 +25,8 @@ log = logging.getLogger("main")
 async def lifespan(app: FastAPI):
     """Enciende el trazado al arrancar y vacia el buffer al apagar. Si no hay
     claves de LangFuse, las dos llamadas no hacen nada."""
+    if not META_APP_SECRET:
+        log.warning("META_APP_SECRET vacio: el webhook NO valida la firma de Meta")
     trazas.iniciar()
     yield
     trazas.cerrar()
@@ -31,7 +36,7 @@ app = FastAPI(title="Chatbot Varka", lifespan=lifespan)
 
 # Marcador de version: subilo en cada cambio de prompt/logica para poder verificar,
 # desde GET /, que EasyPanel realmente deployo el codigo nuevo (y no una copia vieja).
-APP_VERSION = "2026-09-24-b"
+APP_VERSION = "2026-09-25-a"
 
 
 @app.get("/")
@@ -67,9 +72,24 @@ async def _procesar(to: str, phone: str, push: str, texto: str, msg_id: str) -> 
         await alerts.avisar_error(f"Mensaje de {push} ({phone})", e)
 
 
+def _firma_valida(crudo: bytes, encabezado: str) -> bool:
+    """Meta firma cada POST con HMAC-SHA256 del cuerpo crudo y el App Secret, en
+    X-Hub-Signature-256 como 'sha256=<hex>'. Se firma el cuerpo tal cual llego:
+    parsearlo y volver a serializarlo cambia los bytes y la firma no coincide."""
+    if not encabezado.startswith("sha256="):
+        return False
+    esperada = hmac.new(META_APP_SECRET.encode(), crudo, hashlib.sha256).hexdigest()
+    return hmac.compare_digest(esperada, encabezado[len("sha256="):])
+
+
 @app.post("/webhook")
 async def webhook(req: Request):
-    body = await req.json()
+    crudo = await req.body()
+    # Sin esto cualquiera que conozca la URL fabrica mensajes con el numero que quiera.
+    if META_APP_SECRET and not _firma_valida(crudo, req.headers.get("x-hub-signature-256", "")):
+        log.warning("POST /webhook rechazado: firma de Meta ausente o invalida")
+        return Response(status_code=403)
+    body = json.loads(crudo)
 
     # Estructura de Meta: entry[].changes[].value  (puede traer messages y/o statuses)
     try:

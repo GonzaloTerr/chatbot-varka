@@ -14,6 +14,9 @@ GRAPH_API_VERSION = os.environ.get("GRAPH_API_VERSION", "v22.0")
 WHATSAPP_TOKEN = os.environ.get("WHATSAPP_TOKEN", "")               # token de acceso (permanente en prod)
 WHATSAPP_PHONE_NUMBER_ID = os.environ.get("WHATSAPP_PHONE_NUMBER_ID", "")  # id del numero (no el numero)
 WHATSAPP_VERIFY_TOKEN = os.environ.get("WHATSAPP_VERIFY_TOKEN", "varka_wa_2026")  # para el GET de verificacion
+# App Secret de la app de Meta: con el se valida la firma X-Hub-Signature-256 de cada POST.
+# Vacio = no se valida (se procesa como antes). Vaciarlo en EasyPanel es el rollback.
+META_APP_SECRET = os.environ.get("META_APP_SECRET", "")
 
 # --- WAHA (legacy, ya no se usa; se migro a la Cloud API oficial) ---
 WAHA_URL = os.environ.get("WAHA_URL", "https://your-waha-host.example.com")

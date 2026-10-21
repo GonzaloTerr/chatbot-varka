@@ -576,6 +576,38 @@
         "consulta_agenda": true
       },
       "juez": []
+    },
+    {
+      "id": "in-pide-chatbot",
+      "grupo": "entrante",
+      "descripcion": "Pide un chatbot y lo repite; el perfil de WhatsApp tiene nombre de negocio (caso real del 21/10)",
+      "push_name": "Distribuidora del Sur",
+      "turnos": [
+        "Hola",
+        "quiero un chatbot",
+        "perfecto",
+        "necesito un chatbot",
+        "somos una distribuidora mayorista de alimentos",
+        "quiero un chatbot"
+      ],
+      "contexto": [
+        "Qué es Varka"
+      ],
+      "esperado": "Sigue con el chatbot que pidió: cómo funcionaría y qué hace falta saber para armarlo. No la lleva a automatizar la trastienda ni le pregunta a qué se dedica 'Distribuidora del Sur'.",
+      "checks": {
+        "sin_herramientas": true,
+        "no_contiene": [
+          "trastienda",
+          "antes de armar",
+          "lo que m[aá]s ahorra",
+          "ahorro grande",
+          "a qu[eé] se dedica distribuidora del sur"
+        ]
+      },
+      "juez": [
+        "responde_lo_que_preguntan",
+        "no_repregunta"
+      ]
     }
   ]
 }

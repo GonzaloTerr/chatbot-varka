@@ -36,7 +36,7 @@ app = FastAPI(title="Chatbot Varka", lifespan=lifespan)
 
 # Marcador de version: subilo en cada cambio de prompt/logica para poder verificar,
 # desde GET /, que EasyPanel realmente deployo el codigo nuevo (y no una copia vieja).
-APP_VERSION = "2026-10-21-a"
+APP_VERSION = "2026-10-21-b"
 
 
 @app.get("/")

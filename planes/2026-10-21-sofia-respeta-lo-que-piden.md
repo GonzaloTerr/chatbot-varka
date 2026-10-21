@@ -39,3 +39,27 @@ Causa: el system prompt define el rol como "detectar dónde pierde tiempo en tar
 - Compuerta sin juez: ~USD 0,20 por corrida. Estimado: 2 corridas.
 - Caso nuevo con juez: ~USD 0,05.
 - Total estimado: **~USD 0,45**, contra la misma clave de Anthropic que atiende a Sofía.
+
+---
+
+## Segunda parte (21/10, después de la prueba de Gonzalo)
+
+En la prueba con la versión `2026-10-21-a`, Sofía siguió con el chatbot, pero falló el agendado. Las trazas de Langfuse muestran esto:
+- Ofreció 4 turnos ("9 u 10, o 9 u 10").
+- Con el email ya dado, consultó la agenda (el PASO 3 la obligaba) y cortó ahí: no reservó y volvió a pedir el email.
+- La guarda de reserva falsa lo rescató y la reserva salió bien (jue 22/10, 09:00). Pero el texto final de Haiku fue "en una hora nos vemos, te llamamos".
+- Interpretó "sobre precios" (lo que preguntan los clientes de la persona) como una pregunta por el precio de Varka y dio US$1.500 + US$200.
+
+Cambios (aprobados por Gonzalo, sin correr pruebas pagas):
+1. `tools.py`:
+   - `consultar_disponibilidad` devuelve exactamente 2 turnos, el primero de cada uno de los dos primeros días con lugar.
+   - `agendar_diagnostico` recibe `inicio` en hora local (`AAAA-MM-DDTHH:MM`) y busca el turno solo en Cal.com. Ya no hace falta consultar dos veces.
+   - Si el turno no está libre, devuelve 2 alternativas. Sigue aceptando un ISO con zona.
+2. `agent.py`:
+   - PASO 1 a 3 del prompt: los 2 turnos de la herramienta, nunca pedir el email dos veces y reservar en el mismo mensaje.
+   - Regla de PRECIOS: solo si preguntan cuánto cuesta Varka.
+   - Guarda 4: la confirmación de la reserva la arma el código con lo que devuelve la herramienta.
+3. `evals/correr.py`: la agenda simulada usa el formato nuevo (2 turnos, `inicio` local).
+4. `APP_VERSION` `2026-10-21-b`. Deploy por la API de EasyPanel (`autoDeploy` está en false).
+
+Verificado sin gastar: sintaxis, y `_dos_turnos`, `_a_local` y `_confirmacion` corridos en local, sin llamadas a ninguna API.

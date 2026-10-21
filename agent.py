@@ -56,13 +56,15 @@ DESCUBRIMIENTO SIN ABURRIR (LA REGLA MAS IMPORTANTE DEL ESTILO): la gente se abu
 
 AGENDAR EL DIAGNOSTICO (tenes herramientas; NUNCA inventes horarios ni confirmes una reserva sin haberla hecho con la herramienta):
 Segui SIEMPRE este orden:
-- PASO 1, HORARIOS PRIMERO: cuando la persona quiera agendar, usa 'consultar_disponibilidad' en ESE MISMO mensaje y ofrecele EXACTAMENTE 2 opciones de dia y hora (solo de las que devuelve la herramienta). NO pidas el email antes de mostrar horarios, no le preguntes cuantos dias mirar (usa el default de la herramienta) y nunca digas 'te paso los horarios' sin pasarlos.
-- PASO 2, EMAIL: cuando elija una opcion, pedile el email para la confirmacion (el nombre y los datos del negocio ya los tenes del descubrimiento). Si ya te lo dio, salta al paso 3.
-- PASO 3, RESERVA: los resultados de las herramientas de mensajes anteriores NO los ves, asi que ANTES de reservar volve a usar 'consultar_disponibilidad' y toma de ahi el 'inicio' EXACTO del turno que eligio; nunca armes el 'inicio' vos. Despues usa 'agendar_diagnostico' con ese 'inicio' Y un resumen en el campo 'notas' (empresa, rubro, que necesita y como lo maneja hoy) para que el equipo llegue con contexto a la charla. Si el turno elegido ya no aparece, decile que se ocupo y ofrecele otros 2.
+- PASO 1, HORARIOS PRIMERO: cuando la persona quiera agendar, usa 'consultar_disponibilidad' en ESE MISMO mensaje y ofrecele los 2 turnos que devuelve la herramienta, ni uno mas. NO pidas el email antes de mostrar horarios, no le preguntes cuantos dias mirar (usa el default de la herramienta) y nunca digas 'te paso los horarios' sin pasarlos.
+- PASO 2, EMAIL: cuando elija una opcion, pedile el email para la confirmacion (el nombre y los datos del negocio ya los tenes del descubrimiento). Si ya te lo dio, salta al paso 3. NUNCA pidas el email dos veces: si ya aparece en la charla, usalo.
+- PASO 3, RESERVA: apenas tengas el turno elegido y el email, usa 'agendar_diagnostico' EN ESE MISMO MENSAJE, sin volver a consultar la agenda (la herramienta verifica sola que siga libre). En 'inicio' pone la fecha y hora que eligio, en hora de Argentina y formato AAAA-MM-DDTHH:MM (la fecha de hoy esta en el contexto). En 'notas' pone un resumen (empresa, rubro, que necesita y como lo maneja hoy) para que el equipo llegue con contexto a la charla. Si la herramienta dice que el turno ya no esta libre, ofrecele los 2 que te devuelve.
 - Si la reserva falla, ofrecele otro horario o, como ultimo recurso, pasale el link: {CAL_LINK}
 - Podes usar 'calificar_lead' para priorizar (interno, NO se lo menciones a la persona).
 
-ESTILO (REGLA DURA DE LARGO, prioritaria, revisala antes de mandar): mensajes MUY CORTOS tipo WhatsApp. Lo normal es UNA sola oracion; como MAXIMO dos oraciones cortas, y solo si de verdad hace falta. Tope: menos de 300 caracteres SIEMPRE; si te pasas, borra hasta que entre. TODO en un solo bloque corto: PROHIBIDO usar saltos de linea, PROHIBIDO separar en parrafos, PROHIBIDO los bloques de texto, PROHIBIDO enumeraciones o listas de ejemplos (no encadenes 'precios, stock, pedidos, reportes...'; si das un ejemplo, UNO solo). UNA sola idea por mensaje: no juntes presentacion + explicacion + pregunta en el mismo mensaje. NUNCA te re-presentes ni repitas quien sos ni que hace Varka si ya lo dijiste antes en la charla; presentacion completa SOLO en el primer mensaje y en UNA oracion. Como mucho UNA pregunta por mensaje, o ninguna (nunca dos signos de pregunta en el mismo mensaje). Es mejor mandar poco y que la persona pregunte, que abrumarla. No repitas info que ya diste ni vuelvas a tirar tu propuesta en cada mensaje. NO termines cada mensaje ofreciendo agendar el diagnostico: varia los cierres, muchos mensajes cierran con un dato util, una idea o nada. Si preguntan precios, derivalos al diagnostico gratuito."""
+ESTILO (REGLA DURA DE LARGO, prioritaria, revisala antes de mandar): mensajes MUY CORTOS tipo WhatsApp. Lo normal es UNA sola oracion; como MAXIMO dos oraciones cortas, y solo si de verdad hace falta. Tope: menos de 300 caracteres SIEMPRE; si te pasas, borra hasta que entre. TODO en un solo bloque corto: PROHIBIDO usar saltos de linea, PROHIBIDO separar en parrafos, PROHIBIDO los bloques de texto, PROHIBIDO enumeraciones o listas de ejemplos (no encadenes 'precios, stock, pedidos, reportes...'; si das un ejemplo, UNO solo). UNA sola idea por mensaje: no juntes presentacion + explicacion + pregunta en el mismo mensaje. NUNCA te re-presentes ni repitas quien sos ni que hace Varka si ya lo dijiste antes en la charla; presentacion completa SOLO en el primer mensaje y en UNA oracion. Como mucho UNA pregunta por mensaje, o ninguna (nunca dos signos de pregunta en el mismo mensaje). Es mejor mandar poco y que la persona pregunte, que abrumarla. No repitas info que ya diste ni vuelvas a tirar tu propuesta en cada mensaje. NO termines cada mensaje ofreciendo agendar el diagnostico: varia los cierres, muchos mensajes cierran con un dato util, una idea o nada.
+
+PRECIOS: habla de precios de Varka SOLO si la persona pregunta cuanto cuesta el servicio ('cuanto sale?', 'que precio tiene?'). Si menciona los precios de SU negocio (por ejemplo, 'mis clientes preguntan precios'), eso NO es una pregunta por el precio de Varka: no des precios, segui con lo suyo. Cuando si te preguntan, derivalos al diagnostico gratuito."""
 
 
 async def responder(historial: list[dict], texto: str, push_name: str,
@@ -194,6 +196,11 @@ async def _responder(historial: list[dict], texto: str, push_name: str) -> str:
                 "argentino y sin esa expresion. Solo el texto.]")), sin_tools=True)
             salida = _texto(resp) or salida
             trazas.salida(obs, {"corregida": salida})
+
+    # 4) Confirmacion de la reserva armada por codigo con lo que devolvio la herramienta.
+    #    Haiku la escribia a su manera: "en una hora nos vemos, te llamamos" (21/10).
+    if _reservo(hechas):
+        salida = _confirmacion(hechas)
     # Garantia deterministica de "un solo bloque": Haiku a veces separa en parrafos
     # aunque el prompt lo prohiba, asi que colapsamos saltos de linea a un espacio.
     salida = re.sub(r"\s*\n+\s*", " ", salida)
@@ -275,6 +282,20 @@ _PROHIBIDAS = re.compile(
 
 def _reservo(hechas: list) -> bool:
     return any(n == "agendar_diagnostico" and s.startswith("RESERVA CONFIRMADA") for n, s in hechas)
+
+
+_DIAS_LARGOS = {"lun": "lunes", "mar": "martes", "mie": "miércoles", "jue": "jueves",
+                "vie": "viernes", "sab": "sábado", "dom": "domingo"}
+
+
+def _confirmacion(hechas: list) -> str:
+    """El texto que recibe la persona cuando la reserva salio. Toma dia y hora de la
+    salida de agendar_diagnostico ('RESERVA CONFIRMADA para X el jue 22/10 a las 09:00')."""
+    s = next(s for n, s in reversed(hechas)
+             if n == "agendar_diagnostico" and s.startswith("RESERVA CONFIRMADA"))
+    m = re.search(r" el (\w{3}) (\d{2}/\d{2}) a las (\d{2}:\d{2})", s)
+    cuando = f" para el {_DIAS_LARGOS.get(m[1], m[1])} {m[2]} a las {m[3]}" if m else ""
+    return f"Listo, quedó reservado el diagnóstico{cuando}. Te llega la confirmación al mail."
 
 
 def _hay_email(texto: str, historial: list[dict]) -> bool:

@@ -71,9 +71,8 @@ _modo_cal = contextvars.ContextVar("modo_cal")
 
 # ---------- Agenda simulada ----------
 
-def _agenda() -> list[tuple[str, str]]:
-    """Turnos de los proximos 3 dias habiles a las 09:00 y 10:00 (hora de Argentina).
-    Devuelve [(etiqueta, inicio_utc)] con el mismo formato que la herramienta real."""
+def _agenda() -> list[datetime]:
+    """Turnos de los proximos 3 dias habiles a las 09:00 y 10:00 (hora de Argentina)."""
     tz = ZoneInfo(TIMEZONE)
     dia = datetime.now(tz).date()
     turnos = []
@@ -82,9 +81,7 @@ def _agenda() -> list[tuple[str, str]]:
         if dia.weekday() >= 5:
             continue
         for hora in (9, 10):
-            local = datetime(dia.year, dia.month, dia.day, hora, tzinfo=tz)
-            utc = local.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.000Z")
-            turnos.append((f"{tools._DIAS_ES[local.weekday()]} {local.strftime('%d/%m')} a las {local.strftime('%H:%M')}", utc))
+            turnos.append(datetime(dia.year, dia.month, dia.day, hora, tzinfo=tz))
     return turnos
 
 
@@ -92,17 +89,22 @@ AGENDA = _agenda()
 
 
 async def _ejecutar(nombre: str, args: dict) -> str:
+    # Mismos textos y reglas que la herramienta real (tools.py): ofrece 2 turnos y la
+    # reserva busca sola el turno pedido en la agenda.
     if nombre == "consultar_disponibilidad":
-        salida = ("Turnos libres (ofrecele el dia/hora; para reservar usa el campo 'inicio' tal cual):\n"
-                  + "\n".join(f"- {e}  (inicio: {u})" for e, u in AGENDA))
+        salida = ("Turnos libres. Ofrecele EXACTAMENTE estos 2, no otros. Para reservar, usa "
+                  "agendar_diagnostico con el 'inicio' del que elija:\n"
+                  + tools._lista(tools._dos_turnos(AGENDA)))
     elif nombre == "agendar_diagnostico":
-        inicio = args.get("inicio", "")
-        if _modo_cal.get() == "falla" or inicio not in {u for _, u in AGENDA}:
+        try:
+            pedido = tools._a_local(args.get("inicio", ""))
+        except ValueError:
+            pedido = None
+        if _modo_cal.get() == "falla" or pedido not in AGENDA:
             salida = ("No se pudo reservar (error 400: el horario no esta disponible). "
                       f"Quiza el horario ya se ocupo; ofrecele otro o pasale el link: {tools.CAL_LINK}")
         else:
-            local = datetime.fromisoformat(inicio.replace("Z", "+00:00")).astimezone(ZoneInfo(TIMEZONE))
-            cuando = f"{tools._DIAS_ES[local.weekday()]} {local.strftime('%d/%m a las %H:%M')}"
+            cuando = f"{tools._DIAS_ES[pedido.weekday()]} {pedido.strftime('%d/%m a las %H:%M')}"
             salida = (f"RESERVA CONFIRMADA para {args.get('nombre')} el {cuando}. "
                       f"Le llega la confirmacion al mail {args.get('email')}.")
     else:
